@@ -38,3 +38,16 @@ table {
   position: absolute;
   top: 0px;
   left: 0px; }
+
+.ui_container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  width: auto;
+  border: 1px solid red;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.8); }
+  .ui_container .buildings_container {
+    width: 50%;
+    float: right; }
