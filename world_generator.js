@@ -3,11 +3,7 @@ function WorldGen(world_seed, scale){
 	this.world_seed = world_seed;
 	this.ocean_level = 0.57;
 
-	// noise_gen.seed(this.world_seed);
-	// this.simplex = new SimplexNoise();
-	// this.fast_simplex = new FastSimplexNoise({ frequency: 1, octaves: 8, frequency: 0.3, random:function(){return Math.random();} }); // This generator has some built in FBM stuff
-	// PerlinSimplex.noiseDetail(3,0.5);
-	// this.fast_simplex = new FastSimplexNoise({random:function(){return world_seed;} });
+
 	this.random=function(){
 		return world_seed;
 	}
@@ -34,18 +30,8 @@ function WorldGen(world_seed, scale){
 		// 	}
 		// }
 
-		// var world_size = 1000;
-		// var world_scale = world_size / cube_size;
-
 		for(x = start_x; x < (cube_size) + start_x; x++){
-			// tmp_x = x * world_scale;
 			for(y = start_y; y < (cube_size) + start_y; y++){
-				// tmp_y = y * world_scale;
-
-				// nx = Math.cos( ((tmp_x/world_size)*this.scale) * 2 * Math.PI);
-				// ny = Math.cos( ((tmp_y/world_size)*this.scale) * 2 * Math.PI);
-				// nz = Math.sin( ((tmp_x/world_size)*this.scale) * 2 * Math.PI);
-				// nw = Math.sin( ((tmp_y/world_size)*this.scale) * 2 * Math.PI);
 				nx = Math.cos( ((x/cube_size)*this.scale) * 2 * Math.PI);
 				ny = Math.cos( ((y/cube_size)*this.scale) * 2 * Math.PI);
 				nz = Math.sin( ((x/cube_size)*this.scale) * 2 * Math.PI);
@@ -55,6 +41,7 @@ function WorldGen(world_seed, scale){
 			}
 		}
 
+		// Test using set world size
 		// var world_size = 10000;
 		// var world_scale = world_size / cube_size;
 

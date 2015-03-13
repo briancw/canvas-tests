@@ -30,6 +30,8 @@ $(document).ready(function(){
 	// The closest zoom I could manage : 0.00000000000002
 	// (24,901 * 1609344) * 0.00000000000002
 	// Visible land at that zoom 115.550399020945
+	// Max possible map resolution: 2.5e^27
+	// Assuming map is earth sized, 0.00000005 = 6ft per pixel
 
 	// world_ctx.font="20px Georgia";
 	// scale = 1;
