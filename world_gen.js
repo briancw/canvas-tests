@@ -1,11 +1,9 @@
 var doc_width = $(window).width();
 var doc_height = $(window).height();
 var init_center = [1042, 1042];
-var cube_size = 200;
 var tile_width = 2;
-var scale = 0.32;
-var scale = 1;
 var ocean_level = 0.57;
+// var world_size = 1000;
 
 $(document).ready(function(){
 
@@ -18,32 +16,38 @@ $(document).ready(function(){
 	var world_ctx = world_canvas.getContext('2d');
 
 	this.url_seed = location.search.split('seed=')[1];
-	if(this.url_seed == 'random'){
-		var world_seed = Math.random();
-	} else {
-		// var world_seed = 0.329560888687749;
-		var world_seed = 0.4710536374424983;
-	}
-	// console.log(world_seed);
+	this.url_size = location.search.split('size=')[1];
+	this.url_scale = location.search.split('scale=')[1];
+	var world_seed = (this.url_seed == 'random') ? Math.random() : 0.4710536374424983;
+	var cube_size = (this.url_size) ? parseInt(this.url_size,10) : 200;
+	var scale = (this.url_scale) ? parseFloat(this.url_scale,10) : 1;
+	// console.log(cube_size);
 
 	var world_gen = new WorldGen(world_seed, scale);
-	var heightmap = world_gen.get_heightmap(cube_size, 0, 0);
-	draw_world(heightmap, world_ctx);
+	var heightmap = world_gen.get_heightmap(cube_size, 115.550399020945/scale, 100/scale);
+	draw_world(heightmap, cube_size, world_ctx);
+
+	// The closest zoom I could manage : 0.00000000000002
+	// (24,901 * 1609344) * 0.00000000000002
+	// Visible land at that zoom 115.550399020945
 
 	// world_ctx.font="20px Georgia";
+	// scale = 1;
 	// var i = 0;
 	// setInterval(function(){
 	// // 	// world_ctx.clearRect(0,0,doc_width,doc_height);
-	// 	world_gen.scale = world_gen.scale-0.05;
-	// 	heightmap = world_gen.get_heightmap(cube_size, 0, 0);
-	// 	draw_world(heightmap, world_ctx);
+	// 	scale /= 2;
+	// 	console.log( scale );
+	// 	world_gen.scale = scale;
+	// 	heightmap = world_gen.get_heightmap(cube_size, 115.550399020945/scale, 100/scale);
+	// 	draw_world(heightmap, cube_size, world_ctx);
 	// // 	world_ctx.fillText('Generated, '+i,10,50);
 	// 	i+=1;
 	// }, 1000);
 
 });
 
-function draw_world(heightmap, ctx){
+function draw_world(heightmap, cube_size, ctx){
 
 	for (var i in heightmap){
 		var height = heightmap[i].height;

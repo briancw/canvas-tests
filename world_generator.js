@@ -2,7 +2,6 @@ function WorldGen(world_seed, scale){
 	this.scale = scale;
 	this.world_seed = world_seed;
 	this.ocean_level = 0.57;
-	this.z = 1;
 
 	// noise_gen.seed(this.world_seed);
 	// this.simplex = new SimplexNoise();
@@ -13,7 +12,13 @@ function WorldGen(world_seed, scale){
 		return world_seed;
 	}
 
-	this.fast_simplex = new FastSimplexNoise({octaves: 12, frequency: 0.3, random: this.random});
+	// good for 2d
+	// this.fast_simplex = new FastSimplexNoise({octaves: 12, frequency: 0.0002, random: this.random});
+	// Persistence seems important to complexity, and effects blob sizes
+	this.fast_simplex = new FastSimplexNoise({octaves: 12, frequency: 0.315, persistence: 0.5, random: this.random});
+	// var tmp_scale = 0.1;
+	// this.fast_simplex.frequency *= tmp_scale;
+	// this.fast_simplex.persistence /= tmp_scale
 	// this.fast_simplex = new FastSimplexNoise();
 
 	this.get_heightmap = function(cube_size, start_x, start_y){
@@ -29,78 +34,41 @@ function WorldGen(world_seed, scale){
 		// 	}
 		// }
 
-		for(i = start_x; i < cube_size + start_x; i++){
+		// var world_size = 1000;
+		// var world_scale = world_size / cube_size;
 
-			for(j = start_y; j < cube_size + start_y; j++){
+		for(x = start_x; x < (cube_size) + start_x; x++){
+			// tmp_x = x * world_scale;
+			for(y = start_y; y < (cube_size) + start_y; y++){
+				// tmp_y = y * world_scale;
 
-				nx = Math.cos(( (i*this.scale) /cube_size) * 2 * Math.PI);
-				ny = Math.cos(( (j*this.scale) /cube_size) * 2 * Math.PI);
-				nz = Math.sin(( (i*this.scale) /cube_size) * 2 * Math.PI);
-				nw = Math.sin(( (j*this.scale) /cube_size) * 2 * Math.PI);
+				// nx = Math.cos( ((tmp_x/world_size)*this.scale) * 2 * Math.PI);
+				// ny = Math.cos( ((tmp_y/world_size)*this.scale) * 2 * Math.PI);
+				// nz = Math.sin( ((tmp_x/world_size)*this.scale) * 2 * Math.PI);
+				// nw = Math.sin( ((tmp_y/world_size)*this.scale) * 2 * Math.PI);
+				nx = Math.cos( ((x/cube_size)*this.scale) * 2 * Math.PI);
+				ny = Math.cos( ((y/cube_size)*this.scale) * 2 * Math.PI);
+				nz = Math.sin( ((x/cube_size)*this.scale) * 2 * Math.PI);
+				nw = Math.sin( ((y/cube_size)*this.scale) * 2 * Math.PI);
 
 				heightmap.push( {height: (this.fast_simplex.get4DNoise(nx,ny,nz,nw) + 1)/2});
 			}
 		}
 
+		// var world_size = 10000;
+		// var world_scale = world_size / cube_size;
 
-		// Working 4d sample
-		// for (i = 0; i < cube_size; i++){
-		// 	y = 2*Math.PI*(i+start_y)/cube_size;
-
-		// 	for (j = 0; j < cube_size; j++){
-		// 		x = 2*Math.PI*(j+start_x)/cube_size;
-
-		// 		octaves = 8;
-		// 		scale = this.scale;
-		// 		amplitude = 1.0;
-		// 		v = 0.0;
-
-		// 		for (oct = 0; oct < octaves; oct++){
-
-		// 			noise = (this.fast_simplex.get4DNoise(Math.sin(x)*scale, Math.cos(x)*scale, Math.sin(y)*scale, Math.cos(y)*scale) + 0.5) / 2;
-
-		// 			// Various other tested and somewhat succesful simplex methods
-		// 			// noise = (this.simplex.noise4D(Math.sin(x)*scale, Math.cos(x)*scale, Math.sin(y)*scale, Math.cos(y)*scale) + 0.5) / 2;
-		// 			// noise = PerlinSimplex.noise(Math.sin(x)*scale, Math.cos(x)*scale, Math.sin(y)*scale, Math.cos(y)*scale);
-
-		// 			v += noise * amplitude;
-		// 			scale *= 2.0;
-		// 			amplitude *= 0.5;
-		// 		}
-
-		// 		heightmap.push({height: v});
-
+		// for(x = start_x; x < (cube_size) + start_x; x++){
+		// 	for(y = start_y; y < (cube_size) + start_y; y++){
+		// 		heightmap.push( {height: (this.fast_simplex.get2DNoise(x*world_scale,y*world_scale) + 1)/2});
 		// 	}
 		// }
-
 
 		// heightmap = this.add_ocean(heightmap);
 		// heightmap = this.add_rivers(heightmap);
 
 		return heightmap;
 	}
-
-	// Now replaced by function above for now
-	// this.fbm_noise = function(x, y, iterations, persistence, scale){
-	// 	var max_amp = 0;
-	// 	var amp = 1;
-	// 	var freq = scale;
-	// 	var noise = 0;
-
-	// 	// add successively smaller, higher-frequency terms
-	// 	for(i = 0; i < iterations; ++i){
-	// 		// noise += noise_gen.simplex3(x * freq, y * freq, this.z * freq) * amp;
-	// 		noise += this.simplex.noise4D(Math.sin(y)*freq, Math.cos(y)*freq, Math.sin(x)*freq, Math.cos(x)*freq);
-	// 		max_amp += amp;
-	// 		amp *= persistence;
-	// 		freq *= 2;
-	// 	}
-
-	// 	// take the average value of the iterations
-	// 	noise /= max_amp;
-	// 	noise = (noise+1)/2;
-	// 	return noise;
-	// }
 
 	this.add_ocean = function(heightmap){
 
