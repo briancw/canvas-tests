@@ -1,0 +1,14 @@
+	var ambientLight = .1;
+	var intensity = 1;
+	var radius = 200;
+	var amb = 'rgba(0,0,0,' + (1-ambientLight) + ')';
+
+	var g = space_ctx.createRadialGradient(200, 200, 0, 200, 200, radius);
+	g.addColorStop(1, 'rgba(0,0,0,' + (1-intensity) + ')');
+	g.addColorStop(0, amb);
+	space_ctx.fillStyle = g;
+	space_ctx.fillRect(200-radius, 200-radius, 200+radius, 200+radius);
+
+	space_ctx.fillStyle = amb;
+	space_ctx.globalCompositeOperation = 'xor';
+	space_ctx.fillRect(0,0,doc_width,doc_height);

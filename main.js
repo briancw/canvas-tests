@@ -42,7 +42,7 @@ function Terrain(terrain_canvas_id){
 
 	this.draw_tilemap = function(){
 		var heightmap = world_gen.get_heightmap(36, this.map_center[0], this.map_center[1]);
-
+console.log( [this.map_center[0],this.map_center[1]] );
 		var start_x = (-this.tile_width*18);
 		var start_y = (-this.tile_width*18);
 		var cube_size = 36;
@@ -88,7 +88,7 @@ function Terrain(terrain_canvas_id){
 		this.map_offset[0] += x_increase;
 		this.map_offset[1] += y_increase;
 
-		if(this.map_offset[0] > this.tile_width){
+		if(this.map_offset[0] > this.tile_width){ // up
 			this.map_offset[0] = 0;
 			this.map_center[1]--;
 		}
@@ -213,6 +213,7 @@ function UI(ui_canvas_id){
 			}
 
 			if(button_pressed == 1){
+
 				if(last_page_x > e.pageX){
 					var pan_amount = (last_page_x - e.pageX) / 2;
 					terrain.pan_map(-pan_amount,pan_amount);
@@ -264,7 +265,7 @@ function UI(ui_canvas_id){
 var doc_width = $(window).width();
 var doc_height = $(window).height();
 var init_center = [1042, 1042];
-var world_scale = 0.0055;
+var world_scale = 1;
 var terrain = new Terrain('terrain');
 var ui = new UI('ui');
 var world_gen = new WorldGen(0.329560888687749, world_scale);
@@ -288,14 +289,14 @@ $(document).ready(function(){
 
 	$(document).keydown(function(e){
 		var pan_amount = 15;
-		if(e.keyCode == 87){
+		if(e.keyCode == 87){ // Up
 			terrain.pan_map(pan_amount,pan_amount);
-		} else if(e.keyCode == 83){
+		} else if(e.keyCode == 83){ // Down
 			terrain.pan_map(-pan_amount,-pan_amount);
-		} else if(e.keyCode == 68){
-			terrain.pan_map(-pan_amount,pan_amount);
-		} else if(e.keyCode == 65){
+		} else if(e.keyCode == 65){ // Left
 			terrain.pan_map(pan_amount,-pan_amount);
+		} else if(e.keyCode == 68){ // Right
+			terrain.pan_map(-pan_amount,pan_amount);
 		}
 	})
 

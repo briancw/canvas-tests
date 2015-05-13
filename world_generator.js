@@ -18,8 +18,10 @@ function WorldGen(world_seed, scale){
 	// this.fast_simplex = new FastSimplexNoise();
 
 	this.get_heightmap = function(cube_size, start_x, start_y){
-
 		heightmap = new Array();
+
+		this.fast_simplex.octaves = 12;
+		this.fast_simplex.frequency = 0.315;
 
 		// Working 2d sphere
 		// this.scale = 1;
@@ -37,11 +39,13 @@ function WorldGen(world_seed, scale){
 				nz = Math.sin( ((x/cube_size)*this.scale) * 2 * Math.PI);
 				nw = Math.sin( ((y/cube_size)*this.scale) * 2 * Math.PI);
 
-				heightmap.push( {height: (this.fast_simplex.get4DNoise(nx,ny,nz,nw) + 1)/2});
+				// heightmap.push( {height: (this.fast_simplex.get4DNoise(nx,ny,nz,nw) + 1)/2});
+				heightmap.push( {height: this.fast_simplex.get4DNoise(nx,ny,nz,nw) + 0.55} );
 			}
 		}
 
 		// Test using set world size
+		// this.fast_simplex.frequency = 0.0002;
 		// var world_size = 10000;
 		// var world_scale = world_size / cube_size;
 
@@ -55,6 +59,26 @@ function WorldGen(world_seed, scale){
 		// heightmap = this.add_rivers(heightmap);
 
 		return heightmap;
+	}
+
+	this.get_climate_map = function(cube_size, start_x, start_y){
+		climate_map = new Array();
+		this.fast_simplex.octaves = 4;
+		this.fast_simplex.frequency = 1.3;
+
+		for(x = start_x; x < (cube_size) + start_x; x++){
+			for(y = start_y; y < (cube_size) + start_y; y++){
+				nx = Math.cos( ((x/cube_size)*this.scale) * 2 * Math.PI);
+				ny = Math.cos( ((y/cube_size)*this.scale) * 2 * Math.PI);
+				nz = Math.sin( ((x/cube_size)*this.scale) * 2 * Math.PI);
+				nw = Math.sin( ((y/cube_size)*this.scale) * 2 * Math.PI);
+
+				// climate_map.push( {height: (this.fast_simplex.get4DNoise(nx,ny,nz,nw) + 1)/2});
+				climate_map.push( {temp: this.fast_simplex.get4DNoise(nx,ny,nz,nw) + 0.5} );
+			}
+		}
+
+		return climate_map;
 	}
 
 	this.add_ocean = function(heightmap){
